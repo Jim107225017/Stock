@@ -1,0 +1,17 @@
+EXCEL_FILE = "Test.xlsx"
+
+HISTORY_SHEET = "History"
+SUMMARY_SHEET = "Summary"
+DIVIDENDS_SHEET = "Dividends"
+REALIZE_GAIN_LOSS_SHEET = "Realized GainLoss"
+UNREALIZE_GAIN_LOSS_SHEET = "Unrealized GainLoss"
+
+DATE_COLUMN = "Date"
+COMPANY_COLUMN = "Company"
+TICKER_COLUMN = "Ticker"
+BUY_COLUMN = "Buy"
+SALE_COLUMN = "Sale"
+PRICE_COLUMN = "Price"
+TOTAL_COLUMN = "Total"
+YEAR_COLUMN = "Year"
+HOLDINGS_COLUMN = "Holdings"
