@@ -33,8 +33,7 @@ class DividendsAction(SheetAction):
         df_dividends = pd.DataFrame()
 
         for ticker_inner in tickers:
-            tw_ticker = f"{ticker_inner}.TW"
-            df_dividends_by_ticker = self.get_stock_dividends(tw_ticker)
+            df_dividends_by_ticker = self.get_stock_dividends(ticker_inner)
             ticker_filter = self.df[TICKER_COLUMN] == ticker_inner
             df_ticker = pd.DataFrame(columns=[DATE_COLUMN, TOTAL_COLUMN])
             for row_inner in range(df_dividends_by_ticker.shape[0]):
@@ -57,6 +56,11 @@ class DividendsAction(SheetAction):
                 new_row = pd.DataFrame({DATE_COLUMN: [date], TOTAL_COLUMN: [total]})
                 df_ticker = pd.concat([df_ticker, new_row], ignore_index=True)
             
+            # Handle Stocks That Have Never Paid Dividends Up To Current Time
+            if df_ticker.empty:
+                new_row = pd.DataFrame({DATE_COLUMN: [datetime.now()], TOTAL_COLUMN: [0]})
+                df_ticker = pd.concat([df_ticker, new_row], ignore_index=True)
+
             df_ticker[YEAR] = df_ticker[DATE].dt.year
             df_aggregate = self.aggregate_df(df_ticker, groups=[YEAR], aggregate={TOTAL_COLUMN: "sum"})
             df_aggregate[TICKER_COLUMN] = ticker_inner
@@ -91,7 +95,7 @@ class DividendsAction(SheetAction):
         stock = yf.Ticker(ticker)
         dividends = stock.dividends
 
-        # TBD: 最後回補日
+        # TODO: 最後回補日
         ################
         
         df_dividends = dividends.reset_index()
