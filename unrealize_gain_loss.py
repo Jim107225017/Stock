@@ -133,9 +133,8 @@ class UnRealizeGainLoss(SheetAction):
         unrewards = []
         
         for _, row in df.iterrows():
-            tw_ticker = f"{row[TICKER_COLUMN]}.TW"
             year = row[YEAR_COLUMN]
-            closed_price = self.get_stock_closed_price_end_of_year(tw_ticker, year)
+            closed_price = self.get_stock_closed_price_end_of_year(row[TICKER_COLUMN], year)
             avg_buy_price = row[AVG_PRICE]
             unreward = (closed_price - avg_buy_price) * row[QUANTITY] * 1000
             unrewards.append({
@@ -161,8 +160,11 @@ class UnRealizeGainLoss(SheetAction):
         end_date_str = end_date.strftime("%Y-%m-%d")
         start_date_str = start_date.strftime("%Y-%m-%d")
         
+        closed_price = 0    # Default Closed Price
         history = stock.history(start=start_date_str, end=end_date_str)
-        closed_price = history.Close.values[-1]
+        
+        if not history.empty:
+            closed_price = history.Close.values[-1]
         
         return closed_price
 
